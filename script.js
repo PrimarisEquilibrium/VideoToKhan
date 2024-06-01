@@ -20,8 +20,16 @@ function pixelDataToKhan(videoData) {
         textOutput += `}\n`;
     }
     textOutput += `currentFrame++;\n};`;
-    console.log(textOutput);
+    return textOutput;
 }
+
+function saveToClipboard(text) {
+    // Copy the text inside the text field
+    navigator.clipboard.writeText(text);
+  
+    // Alert the copied text
+    alert("Khan Academy code has been saved to your clipboard.");
+  }
 
 document.addEventListener("DOMContentLoaded", () => {
     input.addEventListener("change", () => {
@@ -48,13 +56,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 video.play();
                 let frameCount = 0;
-                const drawingLoop = (timestamp, frame) => {
+                const drawingLoop = () => {
                     if (frameCount % frameInterval === 0) {
                         ctx.drawImage(video, 0, 0, size, size, 0, 0, size, size);
 
                         const imageData = ctx.getImageData(0, 0, size, size);
                         const pixels = imageData.data;
-
+                    
                         const pixelData = [];
                         for (let y = 0; y < size; y++) {
                             for (let x = 0; x < size; x++) {
@@ -65,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 pixelData.push({ x, y, r, g, b });
                             }
                         }
-
+                    
                         videoData.push(pixelData);
                     }
                     frameCount++;
@@ -76,7 +84,8 @@ document.addEventListener("DOMContentLoaded", () => {
         })
 
         video.onended = (event) => {
-            pixelDataToKhan(videoData);
+            let textOutput = pixelDataToKhan(videoData);
+            saveToClipboard(textOutput);
         }
     })
 })
