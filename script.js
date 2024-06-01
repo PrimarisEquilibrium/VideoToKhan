@@ -2,8 +2,8 @@ const input = document.getElementById("input");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const addInvertFilter = false;
-const size = 150;  // Define the desired size
-const frameInterval = 50;
+let size = 100;  // Define the desired size
+let frameDivision = 10;
 let videoData = [];
 
 canvas.width = size;
@@ -41,6 +41,27 @@ document.addEventListener("DOMContentLoaded", () => {
         video.autoplay = true;
         document.body.appendChild(video);
 
+        const dimensionValue = document.getElementById("dimension").value;
+        const frameDivisionValue = document.getElementById("frame-division").value;
+        
+        if (dimensionValue) {
+            try {
+                size = Number(dimensionValue);
+            } catch {
+                console.log("Invalid dimension value");
+            }
+        }
+
+        if (frameDivisionValue) {
+            try {
+                frameDivision = Number(frameDivisionValue);
+            } catch {
+                console.log("Invalid frame division value");
+            }
+        }
+
+        console.log(size, frameDivision);
+
         video.addEventListener("canplay", () => {
             if (addInvertFilter) {
                 ctx.filter = "invert(1)";
@@ -49,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
             video.play();
             let frameCount = 0;
             const drawingLoop = () => {
-                if (frameCount % frameInterval === 0) {
+                if (frameCount % frameDivision === 0) {
                     ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, size, size);
 
                     const imageData = ctx.getImageData(0, 0, size, size);
