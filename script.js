@@ -24,10 +24,7 @@ function pixelDataToKhan(videoData) {
 }
 
 function saveToClipboard(text) {
-    // Copy the text inside the text field
     navigator.clipboard.writeText(text);
-  
-    // Alert the copied text
     alert("Khan Academy code has been saved to your clipboard.");
   }
 
